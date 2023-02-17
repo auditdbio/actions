@@ -34,8 +34,5 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-          ssh -q -t -i "$HOME/.ssh/id_rsa" \
-            -o UserKnownHostsFile=/dev/null \
-            -p $INPUT_REMOTE_DOCKER_PORT \
-            -o StrictHostKeyChecking=no "dev.auditdb.io" bash
+          ssh -q -t -i "$HOME/.ssh/id_rsa" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "dev.auditdb.io" bash
           ls -la
