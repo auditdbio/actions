@@ -15,11 +15,17 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    env:
+        GIT_BRANCH: "#develop"
+        INPUT_SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+        INPUT_SSH_PUBLIC_KEY: ${{secrets.ADB_DEV_PUBLIC_KEY}}
+        INPUT_REMOTE_DOCKER_HOST: ${{secrets.ADB_DEV_HOST}}
+        INPUT_DEPLOY_PATH: "./path"
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -36,6 +42,7 @@ jobs:
           mkdir -p "$HOME/.ssh"
           printf '%s\n' "$INPUT_SSH_PRIVATE_KEY" > "$HOME/.ssh/id_rsa"
           chmod 600 "$HOME/.ssh/id_rsa"
+          eval $(ssh-agent)
           ssh-add "$HOME/.ssh/id_rsa"
           echo "Add known hosts"
           printf '%s %s\n' "$SSH_HOST" "$INPUT_SSH_PUBLIC_KEY" > /etc/ssh/ssh_known_hosts
