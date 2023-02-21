@@ -44,8 +44,6 @@ jobs:
           chmod 600 "$HOME/.ssh/id_rsa"
           eval $(ssh-agent)
           ssh-add "$HOME/.ssh/id_rsa"
-          echo "Add known hosts"
-          printf '%s %s\n' "${INPUT_REMOTE_DOCKER_HOST#*@}" "$INPUT_SSH_PUBLIC_KEY" > /etc/ssh/ssh_known_hosts
           echo "Upload docker-compose file"
           ssh -qit "$HOME/.ssh/id_rsa" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$INPUT_REMOTE_DOCKER_HOST" "mkdir -p $INPUT_DEPLOY_PATH"
           scp -i "$HOME/.ssh/id_rsa" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no docker-compose.yml "$INPUT_REMOTE_DOCKER_HOST:$INPUT_DEPLOY_PATH/docker-compose.yml"
