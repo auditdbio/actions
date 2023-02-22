@@ -45,7 +45,9 @@ jobs:
           eval $(ssh-agent)
           ssh-add "$HOME/.ssh/id_rsa"
           echo "Upload docker-compose file"
+          echo 'ssh -qit "$HOME/.ssh/id_rsa" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$INPUT_REMOTE_DOCKER_HOST" "mkdir -p $INPUT_DEPLOY_PATH"'
           ssh -qit "$HOME/.ssh/id_rsa" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$INPUT_REMOTE_DOCKER_HOST" "mkdir -p $INPUT_DEPLOY_PATH"
+          echo 'scp -i "$HOME/.ssh/id_rsa" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no docker-compose.yml "$INPUT_REMOTE_DOCKER_HOST:$INPUT_DEPLOY_PATH/docker-compose.yml"'
           scp -i "$HOME/.ssh/id_rsa" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no docker-compose.yml "$INPUT_REMOTE_DOCKER_HOST:$INPUT_DEPLOY_PATH/docker-compose.yml"
           echo "Build"
           ssh -qit "$HOME/.ssh/id_rsa" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$INPUT_REMOTE_DOCKER_HOST" "docker-compose -f $INPUT_DEPLOY_PATH/docker-compose.yml up -d --build"
